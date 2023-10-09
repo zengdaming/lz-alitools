@@ -1,0 +1,54 @@
+{
+  "success": true,
+  "data": {
+    "total": 816,
+    "data": [
+      {
+        "saleName": "Claire Yao",
+        "isDing": false,
+        "repurchase": "",
+        "willLoss": "n",
+        "follow": "n",
+        "customerId": "e6f0b1ea3eb7ca1de5d2d6c08cdab76d",
+        "companyName": "TAN TANWEN",
+        "customerGroup": "NA",
+        "taOrderCount": 0,
+        "annualProcurement": "NA",
+        "originSaleName": null,
+        "importanceLevel": "0",
+        "countryCode": "CN",
+        "memberLevel": "COMMON_MEMBER",
+        "loginId": "cn1517370989urdj,",
+        "growthLevel": null,
+        "pickUpDate": "2023-05-25T05:00:16.000Z",
+        "recentNote": null,
+        "marketingCustomerGroups": [],
+        "categorys": [],
+        "customerSources": [
+          "name_card",
+          "Alibaba"
+        ],
+        "businessTypes": [],
+        "createDate": "2022-11-22T06:59:31.000Z",
+        "mainContact": {
+          "contactName": "TAN TANWEN",
+          "aliId": "2776167306",
+          "wangwangId": "8pctgRBMALM4dn5L9E0Mh1S9yDsk9Pxq6wdkfYSa+s4=",
+          "email": "2***2@qq.com",
+          "loginId": "cn1517370989urdj",
+          "blueTag": null,
+          "avatar": null,
+          "referenceId": "227449596",
+          "isGoldenBuyer": null,
+          "goldenBuyerLogo": null,
+          "highQualityLevelTag": null
+        },
+        "marketingGroups": null,
+        "annualProcurementOnline": null
+      }
+    ],
+    "crmSourceRoleId": "crm_alicrm_admin"
+  },
+  "message": "",
+  "code": ""
+}

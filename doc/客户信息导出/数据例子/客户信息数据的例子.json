@@ -1,0 +1,101 @@
+{
+  "success": true,
+  "data": {
+    "data": {
+      "customerType": "WAIT_TO_ADD_CUSTOMER",
+      "hasCreatedCouponPrivilege": true,
+      "status": "enabled",
+      "alicrmCustomerInfo": {
+        "customerId": null,
+        "repurchaseCustomer": false,
+        "ownerName": null,
+        "willLoss": false,
+        "potentialScore": "-1",
+        "firstName": null,
+        "lastName": null,
+        "email": null,
+        "mobileNumber": null,
+        "phoneNumber": null,
+        "companyName": null,
+        "companyWebSite": null,
+        "customerGroup": null,
+        "importanceLevel": null,
+        "wangwangid": null,
+        "contractId": null,
+        "noteLabel": null,
+        "noteCode": null,
+        "parentNoteCode": null,
+        "noteContent": null,
+        "contentCode": null,
+        "scoreInContent": null,
+        "taOrderCount": 0,
+        "taTotalAmount": 0,
+        "taLastBuyPast": null,
+        "rebuy": false,
+        "orderNo": null,
+        "annualProcurement": null,
+        "businessTypes": null,
+        "marketingGroups": null,
+        "categorys": null
+      },
+      "buyerInfo": {
+        "firstName": "maxwell",
+        "lastName": "kapayapundo",
+        "potentialScore": null,
+        "headerFullPath": null,
+        "headerSmallPath": null,
+        "country": "ZW",
+        "levelTag": "C",
+        "registerDate": 1581158820,
+        "companyName": "Print Smart",
+        "companyWebSite": null,
+        "productViewCount": 23,
+        "validInquiryCount": 1,
+        "repliedInquiryCount": 1,
+        "validRfqCount": 0,
+        "loginDays": 15,
+        "spamInquiryMarkedBySupplierCount": 0,
+        "addedToBlacklistCount": 0,
+        "totalOrderCount": -1,
+        "totalOrderVolume": -1,
+        "tradeSupplierCount": -1,
+        "isGoldenBuyer": null,
+        "goldenBuyerLogo": null,
+        "encryptAccountId": "MC1IDX1TsKH5QP0TJBJo7P6og1JEEFNZ1eI91md8SvxYq_D2Z4YQHJA_Mo50C5Un1cc-SuN",
+        "highQualityLevelTag": "L1+",
+        "businessTypes": [
+          "Other"
+        ],
+        "salesTypes": null,
+        "buyerContactInfo": {
+          "visible": true,
+          "applyStatus": null,
+          "email": "printsmartplot@gmail.com",
+          "mobileNumber": null,
+          "phoneNumber": "00263-04-750668"
+        },
+        "searchWords": [
+          "*"
+        ],
+        "preferredIndustries": [
+          "Solar Panels",
+          "Fencing, Trellis & Gates",
+          "Energy Storage Battery",
+          "Solar Energy System",
+          "Iron Wire Mesh"
+        ],
+        "lastestRfqList": null,
+        "latestInquiryProducts": [
+          "https://sc04.alicdn.com/kf/H3a489e1e08cb449bb00c1b994efcf8bbA.jpg"
+        ],
+        "buyerShopBehaviorInfo": null
+      },
+      "extValues": {},
+      "isAdmin": true,
+      "isGgsOrIfm": false,
+      "isCGS": true
+    }
+  },
+  "message": "",
+  "code": ""
+}

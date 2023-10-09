@@ -1,0 +1,30 @@
+/*为导出按钮，添加式样。这个是完全复制element-ui*/
+.el-button {
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: #67c23a;
+  border: 1px solid #67c23a;
+  color: #fff;
+  text-align: center;
+  box-sizing: border-box;
+  outline: none;
+  margin: 0;
+  transition: .1s;
+  font-weight: 500;
+  padding: 12px 20px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.el-button:hover {
+  background: #85ce61;
+  border-color: #85ce61;
+}
+
+.is-disable {
+  background-color: #b3e19d;
+  border-color: #b3e19d;
+  cursor: not-allowed;
+}

@@ -1,0 +1,4 @@
+# source字段的数值含义
+
+- RFQ：RFQ商机
+- CONTACT_MKT_KHT_CUSTOMER_TOUCH：Recommend Quotation-系统推荐商机
