@@ -85,7 +85,7 @@ class ExportMessage {
       {title:'创建时间', key:'createTime',   type:'text', height:CELL_HEIGHT},
       {title:'是否分配', key:'assigned',     type:'text', height:CELL_HEIGHT},
       {title:'商机来源', key:'source',       type:'text', height:CELL_HEIGHT},
-
+      {title:'商机分类', key:'feedbackType', type:'text', height:CELL_HEIGHT},
     ];
 
     const BUTTON_DOM = this.exportButtonDom;
@@ -129,10 +129,10 @@ class ExportMessage {
       return;
     }
 
-    const enum sourceEnum {
-      RFQ                             = 'RFQ商机',
-      CONTACT_MKT_KHT_CUSTOMER_TOUCH  = 'Recommend Quotation'
-    }
+    // const enum sourceEnum {
+    //   RFQ                             = 'RFQ商机',
+    //   CONTACT_MKT_KHT_CUSTOMER_TOUCH  = 'Recommend Quotation'
+    // }
 
     let finishCount = 0;//完成计数：用来在按钮上显示进度的
     const IMG_RESIZE_PARAM = `_100x100.jpg`;
@@ -149,7 +149,8 @@ class ExportMessage {
       let assigned   = data.distributeStatus==2?'YES':'NO';//0-RFQ,2-manager,
       let owner      = data.ownerName;
       //@ts-ignore
-      let source     = sourceEnum[data.source] || '' ;//没有对应定义就显示空
+      let source       = this.getSourceName(data.source);
+      let feedbackType = this.getFeedBackType(data.feedbackType);
       //=====获取客户信息====//
       let companyName, email, phone,mobileNumber,level;
       let buyerInfo = null;
@@ -163,13 +164,27 @@ class ExportMessage {
       }
 
       datas.push(
-        {id,productId,name,createTime,assigned,pic,customer,level,country,owner,companyName, email, phone,mobileNumber,source}
+        {id,productId,name,createTime,assigned,pic,customer,level,country,owner,companyName, email, phone,mobileNumber,source,feedbackType}
       )
 
       // 在按钮上显示进度：{完成数}/{总数}
       this.exportButtonDom.innerText=`导出中：${++finishCount}/${list.length}`;
     }
     return datas;
+  }
+
+  private getSourceName(type:any){
+    switch(type){
+      case 'CONTACT_MKT_KHT_CUSTOMER_TOUCH':  return 'Recommend Quotation';
+      case 'RFQ':  return 'RFQ商机';
+      default: return type;
+    }
+  }
+  private getFeedBackType(type:any){
+    switch(type){
+      case 6:  return 'TM商机';
+      default: return '询盘商机';//!!!目前发现，除了6之外，都是询盘商机，未来可能要改
+    }
   }
 
   private async getBuyerInfo( buyerAccountId:any ) {

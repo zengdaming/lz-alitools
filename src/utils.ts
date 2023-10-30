@@ -64,7 +64,7 @@ export function formatPhoneNumber( phoneNumbers:any ) {
 
 /**
  * 格式化手机电话号码用，这是专门给导出客户信息用的
- * @param mobiles 
+ * @param {Array} mobiles 
  */
 export function formatMobiles( mobiles:any ) {
   if( Array.isArray(mobiles) && mobiles.length > 0 ) {

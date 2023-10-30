@@ -165,13 +165,13 @@
     }
   
     function getImageHtml(val, options) {
-      let RATIO = 1.5;
-      options = Object.assign({width: 40*RATIO, height: 60*RATIO}, options)
+      let RATIO = 1;
+      options = Object.assign({width: 40, height: 60 }, options)
       if(!val){
         return  `<td style="width: ${options.width*RATIO+6}px; height: ${options.height*RATIO+6}px; text-align: center; vertical-align: middle"></td>`
         // return  `<td style="text-align: center; vertical-align: middle"></td>`
       }else {
-        return `<td style="width: ${options.width*RATIO+6}px; height: ${options.height*RATIO+6}px; text-align: center; vertical-align: middle"><img src="${val}" height=${options.height} /></td>`
+        return `<td style="width: ${options.width*RATIO+6}px; height: ${options.height*RATIO+6}px; text-align: center; vertical-align: middle"><img src="${val}" style="height:100%" /></td>`
       }
     }
   }

@@ -52,7 +52,7 @@ class ExportProducts {
     {title:'产品图',   key:'absImageUrl',      type:'image',height:CELL_HEIGHT,width:CELL_WIDTH},
     {title:'产品图名字',   key:'absImageName',  type:'text',height:CELL_HEIGHT,width:CELL_WIDTH},
     {title:'产品名',   key:'subject',     type:'text', height:CELL_HEIGHT},
-    {title:'产品ID',   key:'id',       type:'text', height:CELL_HEIGHT},
+    {title:'产品ID',  key:'id',       type:'text', height:CELL_HEIGHT},
     {title:'1级分组', key:'groupName1',       type:'text', height:CELL_HEIGHT},
     {title:'2级分组', key:'groupName2',       type:'text', height:CELL_HEIGHT},
     {title:'3级分组', key:'groupName3',       type:'text', height:CELL_HEIGHT},
