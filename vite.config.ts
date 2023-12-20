@@ -22,8 +22,9 @@ export default defineConfig({
         ],
         grant:['GM_xmlhttpRequest','unsafeWindow'],
         name:'龙泽-阿里巴巴工具集',
-        //downloadURL:'http://resource.zengdm.cn/scripts/tm/alitools.user.js'
-        updateURL:'http://resource.zengdm.cn/scripts/tm/alitools.user.js'
+        downloadURL:'https://raw.githubusercontent.com/zengdaming/lz-alitools/main/dist/alitools.user.js',
+        updateURL  :'https://raw.githubusercontent.com/zengdaming/lz-alitools/main/dist/alitools.user.js'
+
       },
     }),
   ],

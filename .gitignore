@@ -8,7 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
+# dist # 公开dist目录，让用户可通过它来更新脚本
 dist-ssr
 *.local
 
