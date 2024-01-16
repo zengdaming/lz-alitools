@@ -1,7 +1,7 @@
 {
   "name": "alitools",
   "private": true,
-  "version": "0.2.1.5b",
+  "version": "0.2.1.6",
   "author": "zdm",
   "description": "这个是阿里巴巴后台的辅助工具：1、导出询盘。2、导出关键词。3、导出所有产品信息。4、导出客户信息",
   "type": "module",

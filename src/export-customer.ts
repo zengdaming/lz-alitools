@@ -99,13 +99,16 @@ class ExportCustomer {
 
     // 除了获取数据外，还要展示处理进度。
     let   page      = 0;
-    const size      = 10;//一次查询10条，这也是阿里允许查询的最大值
+    const size      = 50;//一次查询10条，这也是阿里允许查询的最大值
     let   totalPage = 0;
     let   allCustomerDetail = new Array();
     let   exButton = this.exportButtonDom;//_run()方法里不能直接用this.exportButtonDom，因为_run是嵌套的方法，this指向不是本class
 
     console.log('============开始获取客户列表========');
     console.log('当前地址：'+ window.location.href);
+
+    const start_time = new Date().getTime();
+
     let _this = this;
     await _run();
     return allCustomerDetail;
@@ -115,7 +118,7 @@ class ExportCustomer {
       //! 延迟设置（重要事情说3遍）
       //! 延迟设置（重要事情说3遍）
       //! 延迟设置（重要事情说3遍）
-      await _this.sleep(2000);//每读取一页数据，故意暂停2秒，避免阿里限制访问
+      await _this.sleep(1000);//每读取一页数据，故意暂停2秒，避免阿里限制访问
       page++;
       let respone:any = await _this.fetchCustomerListByPage(page,size);
       if( respone && !totalPage ) {
@@ -127,7 +130,7 @@ class ExportCustomer {
       exButton.innerText=`处理中,请耐心等候：${page}/${totalPage}页`;
 
       let data = respone.data;
-      if( data && data.length > 0 ){
+      if( data && data.length > 0 && page < 3 ){
         // 拿到当前页的客户id数组
         let customerIdList = new Array( data.length );
         for (let i = 0; i < data.length; i++) {
@@ -139,6 +142,11 @@ class ExportCustomer {
         allCustomerDetail = allCustomerDetail.concat(detailList); // fix:这里应该可以优化内存，避免生成太多无用数组
         
         await _run(); //还有数据，通过递归，查询下一页的数据
+      }
+      else{
+        const end_time = new Date().getTime();
+        exButton.innerText='导出完成';
+        alert(`导出完成，耗时：${(end_time - start_time)/1000}秒`);
       }
     }
   }

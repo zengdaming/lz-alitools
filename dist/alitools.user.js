@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         龙泽-阿里巴巴工具集
 // @namespace    npm/vite-plugin-monkey
-// @version      0.2.1.5b
+// @version      0.2.1.6
 // @author       zdm
 // @description  这个是阿里巴巴后台的辅助工具：1、导出询盘。2、导出关键词。3、导出所有产品信息。4、导出客户信息
 // @icon         https://vitejs.dev/logo.svg
@@ -665,6 +665,7 @@
       // 导出按钮
       __publicField(this, "exportButtonDom", document.createElement("button"));
       __publicField(this, "mySubjectRespone");
+      __publicField(this, "TB_TOKEN", getCookie("_tb_token_"));
       let _this = this;
       let open = window.XMLHttpRequest.prototype.open;
       window.XMLHttpRequest.prototype.open = function(method, url, async) {
@@ -722,14 +723,17 @@
       const BUTTON_DOM = this.exportButtonDom;
       BUTTON_DOM.classList.add("is-disable");
       BUTTON_DOM.setAttribute("disabled", "");
+      let exportCount = 0;
       this.fetchDataFormHook().then((datas) => {
         if (datas && datas.length > 0) {
+          exportCount = datas.length;
           table2excel(column, datas, "询盘数据-" + (/* @__PURE__ */ new Date()).toISOString().split("T")[0]);
         }
       }).finally(() => {
         BUTTON_DOM.classList.remove("is-disable");
         BUTTON_DOM.removeAttribute("disabled");
         BUTTON_DOM.innerText = "导出当前页的询盘";
+        alert(`导出完成，导出了${exportCount}条数据`);
       });
     }
     /**
@@ -759,6 +763,7 @@
         let id = data.requestNo;
         let customer = data.sender.name;
         let country = data.sender.countryName;
+        let countryCode = data.sender.countryCode;
         let createTime = formatTime(data.createTime);
         let assigned = data.distributeStatus == 2 ? "YES" : "NO";
         let owner = data.ownerName;
@@ -766,13 +771,13 @@
         let feedbackType = this.getFeedBackType(data.feedbackType);
         let companyName, email, phone, mobileNumber, level;
         let buyerInfo = null;
-        buyerInfo = await this.getBuyerInfo(data.sender.secAccountId);
+        buyerInfo = await this.getBuyerInfo(customer, countryCode);
         if (buyerInfo) {
-          level = buyerInfo.highQualityLevelTag || "NA";
-          companyName = buyerInfo.companyName || "NA";
-          email = buyerInfo.buyerContactInfo.email || "NA";
-          phone = buyerInfo.buyerContactInfo.phoneNumber || "NA";
-          mobileNumber = buyerInfo.buyerContactInfo.mobileNumber || "NA";
+          level = buyerInfo.level || "--";
+          companyName = buyerInfo.companyName;
+          email = buyerInfo.email;
+          phone = buyerInfo.phone;
+          mobileNumber = buyerInfo.mobileNumber;
         }
         datas.push(
           { id, productId, name, createTime, assigned, pic, customer, level, country, owner, companyName, email, phone, mobileNumber, source, feedbackType }
@@ -799,17 +804,112 @@
           return "询盘商机";
       }
     }
-    async getBuyerInfo(buyerAccountId) {
-      const tb_token = getCookie("_tb_token_");
-      let reqUrl = `https://alicrm.alibaba.com/jsonp/customerPluginQueryServiceI/queryCustomerInfo.json?buyerAccountId=${buyerAccountId}&_tb_token_=${tb_token}`;
-      try {
-        let response = await request(reqUrl);
-        let info = response.data.data.buyerInfo;
-        return info;
-      } catch (error) {
-        alert("导出失败：查询客户详细信息出错");
-        throw error;
+    // private async getBuyerInfo( buyerAccountId:any ) {
+    //   const tb_token=getCookie('_tb_token_');
+    //   let reqUrl=`https://alicrm.alibaba.com/jsonp/customerPluginQueryServiceI/queryCustomerInfo.json?buyerAccountId=${buyerAccountId}&_tb_token_=${tb_token}`;
+    //   try{
+    //     let response:any = await request(reqUrl);//返回的数据例子，参考【客户信息数据例子.json文件】
+    //     let info         = response.data.data.buyerInfo;
+    //     return info;
+    //   } catch ( error ) {
+    //     alert('导出失败：查询客户详细信息出错');
+    //     throw(error)
+    //   }
+    // }
+    async getBuyerInfo(customerName, countryCode) {
+      const customerList = await this.searchCustomerByName(customerName);
+      if (customerList.length === 0) {
+        return {
+          companyName: "可能还没添加客户",
+          email: "可能还没添加客户",
+          phone: "可能还没添加客户",
+          mobileNumber: "可能还没添加客户",
+          level: "可能还没添加客户"
+        };
       }
+      if (customerList.length > 4) {
+        return {
+          companyName: "超过4个同名客户",
+          email: "超过4个同名客户",
+          phone: "超过4个同名客户",
+          mobileNumber: "超过4个同名客户",
+          level: "超过4个同名客户"
+        };
+      }
+      const matchCountrycustomerList = [];
+      for (let i = 0; i < customerList.length; i++) {
+        const customer = customerList[i];
+        const customerDetail = await this.getCustomerDetail(customer.customerId);
+        if (customerDetail.countryCode === countryCode) {
+          matchCountrycustomerList.push(customerDetail);
+        }
+      }
+      if (matchCountrycustomerList.length === 0) {
+        return {
+          companyName: "没有找到客户",
+          email: "没有找到客户",
+          phone: "没有找到客户",
+          mobileNumber: "没有找到客户",
+          level: "没有找到客户"
+        };
+      } else if (matchCountrycustomerList.length == 1) {
+        return matchCountrycustomerList[0];
+      } else {
+        return {
+          companyName: "多个同名同国家客户",
+          email: "多个同名同国家客户",
+          phone: "多个同名同国家客户",
+          mobileNumber: "多个同名同国家客户",
+          level: "多个同名同国家客户"
+        };
+      }
+    }
+    async getCustomerDetail(customerId) {
+      const buyerInfo = {
+        companyName: "获取失败",
+        email: "获取失败",
+        phone: "获取失败",
+        mobileNumber: "获取失败",
+        level: "获取失败",
+        countryCode: null
+      };
+      const t = (/* @__PURE__ */ new Date()).getTime();
+      let reqUrl = `https://alicrm.alibaba.com/eggCrmQn/crm/customerQueryServiceI/queryCustomerAndContacts.json?customerId=${customerId}&_tb_token_=${this.TB_TOKEN}&__t__=${t}`;
+      try {
+        const response = await request(reqUrl, null, "get", "application/x-www-form-urlencoded; charset=UTF-8");
+        const queryCO = response.data.contactQueryCOList[0];
+        const detailCO = response.data.customerDetailCO;
+        buyerInfo.companyName = detailCO.companyName;
+        buyerInfo.level = detailCO.highQualityLevelTag;
+        buyerInfo.countryCode = detailCO.country;
+        if (Array.isArray(queryCO.email) && queryCO.email[0]) {
+          buyerInfo.email = queryCO.email[0];
+        } else {
+          buyerInfo.email = "--";
+        }
+        buyerInfo.phone = formatPhoneNumber(queryCO.phoneNumbers);
+        buyerInfo.mobileNumber = formatMobiles(queryCO.mobileNumber);
+        return buyerInfo;
+      } catch (error) {
+        console.error("导出失败：查询客户详细信息出错", error);
+        return buyerInfo;
+      }
+    }
+    async searchCustomerByName(name) {
+      const t = (/* @__PURE__ */ new Date()).getTime();
+      name = encodeURI(name);
+      let serachURL = `https://alicrm.alibaba.com/eggCrmQn/crm/customerQueryServiceI/queryMainSearchList.json?content=${name}&_tb_token_=${this.TB_TOKEN}&__t__=${t}`;
+      const response = await request(serachURL);
+      const data = response.data.data;
+      const result = [];
+      for (let i = 0; i < data.length; i++) {
+        const customer = data[i];
+        result.push({
+          customerId: customer.customerId,
+          companyName: customer.companyName
+        });
+      }
+      return result;
     }
   }
   class ExportCustomer {
@@ -880,12 +980,13 @@
      */
     async fetchDatas() {
       let page = 0;
-      const size = 10;
+      const size = 50;
       let totalPage = 0;
       let allCustomerDetail = new Array();
       let exButton = this.exportButtonDom;
       console.log("============开始获取客户列表========");
       console.log("当前地址：" + window.location.href);
+      const start_time = (/* @__PURE__ */ new Date()).getTime();
       let _this = this;
       await _run();
       return allCustomerDetail;
@@ -893,7 +994,7 @@
         //! 延迟设置（重要事情说3遍）
         //! 延迟设置（重要事情说3遍）
         //! 延迟设置（重要事情说3遍）
-        await _this.sleep(2e3);
+        await _this.sleep(1e3);
         page++;
         let respone = await _this.fetchCustomerListByPage(page, size);
         if (respone && !totalPage) {
@@ -901,7 +1002,7 @@
         }
         exButton.innerText = `处理中,请耐心等候：${page}/${totalPage}页`;
         let data = respone.data;
-        if (data && data.length > 0) {
+        if (data && data.length > 0 && page < 3) {
           let customerIdList = new Array(data.length);
           for (let i = 0; i < data.length; i++) {
             customerIdList[i] = data[i].customerId;
@@ -909,6 +1010,10 @@
           let detailList = await _this.fetchCustomerDetail(customerIdList);
           allCustomerDetail = allCustomerDetail.concat(detailList);
           await _run();
+        } else {
+          const end_time = (/* @__PURE__ */ new Date()).getTime();
+          exButton.innerText = "导出完成";
+          alert(`导出完成，耗时：${(end_time - start_time) / 1e3}秒`);
         }
       }
     }
