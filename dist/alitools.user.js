@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         龙泽-阿里巴巴工具集
 // @namespace    npm/vite-plugin-monkey
-// @version      0.2.1.6
+// @version      0.2.1.6b
 // @author       zdm
 // @description  这个是阿里巴巴后台的辅助工具：1、导出询盘。2、导出关键词。3、导出所有产品信息。4、导出客户信息
 // @icon         https://vitejs.dev/logo.svg
