@@ -804,20 +804,35 @@
           return "询盘商机";
       }
     }
-    // private async getBuyerInfo( buyerAccountId:any ) {
-    //   const tb_token=getCookie('_tb_token_');
-    //   let reqUrl=`https://alicrm.alibaba.com/jsonp/customerPluginQueryServiceI/queryCustomerInfo.json?buyerAccountId=${buyerAccountId}&_tb_token_=${tb_token}`;
-    //   try{
-    //     let response:any = await request(reqUrl);//返回的数据例子，参考【客户信息数据例子.json文件】
-    //     let info         = response.data.data.buyerInfo;
-    //     return info;
-    //   } catch ( error ) {
-    //     alert('导出失败：查询客户详细信息出错');
-    //     throw(error)
-    //   }
-    // }
+    /**
+     * 根据客户的名字和国家国家码，获取准确的客户的信息。  
+     * 注意，客户的名字可能是空的。  
+     * @param customerName 客户的名字
+     * @param countryCode 客户所属的国家代码，例如“CA”，“US”
+     * @returns 查询的结果
+     */
     async getBuyerInfo(customerName, countryCode) {
-      const customerList = await this.searchCustomerByName(customerName);
+      let customerList = null;
+      try {
+        customerList = await this.searchCustomerByName(customerName);
+      } catch {
+        return {
+          companyName: "查询客户名出错",
+          email: "查询客户名出错",
+          phone: "查询客户名出错",
+          mobileNumber: "查询客户名出错",
+          level: "查询客户名出错"
+        };
+      }
+      if (!customerList) {
+        return {
+          companyName: "空白客户名",
+          email: "空白客户名",
+          phone: "空白客户名",
+          mobileNumber: "空白客户名",
+          level: "空白客户名"
+        };
+      }
       if (customerList.length === 0) {
         return {
           companyName: "可能还没添加客户",
@@ -852,7 +867,7 @@
           mobileNumber: "没有找到客户",
           level: "没有找到客户"
         };
-      } else if (matchCountrycustomerList.length == 1) {
+      } else if (matchCountrycustomerList.length === 1) {
         return matchCountrycustomerList[0];
       } else {
         return {
@@ -895,12 +910,26 @@
         return buyerInfo;
       }
     }
+    /**
+     * 
+     * @param name 要查询的客户的名字
+     * @returns 查询成功返回结果数组，如果查询失败返回null
+     */
     async searchCustomerByName(name) {
+      if (!name || name.trim() === "") {
+        return null;
+      }
       const t = (/* @__PURE__ */ new Date()).getTime();
       name = encodeURI(name);
-      let serachURL = `https://alicrm.alibaba.com/eggCrmQn/crm/customerQueryServiceI/queryMainSearchList.json?content=${name}&_tb_token_=${this.TB_TOKEN}&__t__=${t}`;
+      const serachURL = `https://alicrm.alibaba.com/eggCrmQn/crm/customerQueryServiceI/queryMainSearchList.json?content=${name}&_tb_token_=${this.TB_TOKEN}&__t__=${t}`;
       const response = await request(serachURL);
+      if (!response.success) {
+        return null;
+      }
       const data = response.data.data;
+      if (!data || !Array.isArray(data)) {
+        return null;
+      }
       const result = [];
       for (let i = 0; i < data.length; i++) {
         const customer = data[i];
